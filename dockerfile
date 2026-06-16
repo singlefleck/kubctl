@@ -44,7 +44,9 @@ RUN apt-get update -y && \
 WORKDIR /app
 
 # Copy the release from the build stage
-COPY --from=build /app/_build/prod/rel/rest_api ./
+# COPY --from=build /app/_build/prod/rel/rest_api ./
+COPY --from=build /app/_build/prod/rel/kubctl ./
+
 
 # Set environment variables
 ENV PHX_SERVER=true
@@ -54,4 +56,7 @@ ENV MIX_ENV=prod
 EXPOSE 4000
 
 # Start the application
-CMD ["bin/rest_api", "start"]
+# CMD ["bin/rest_api", "start"]
+
+# FIX IS HERE: Change "rest_api" to "kubctl"
+CMD ["bin/kubctl", "start"] 

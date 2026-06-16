@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubctl-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubctl-api
+  template:
+    metadata:
+      labels:
+        app: kubctl-api
+    spec:
+      containers:
+        - name: kubctl-api
+          # This will pull the image built by your GitHub Action
+          image: ghcr.io/singlefleck/kubctl:main
+          ports:
+            - containerPort: 4000
+          env:
+            - name: PHX_SERVER
+              value: "true"
+            - name: SECRET_KEY_BASE
+              value: yKyLlvNm3TaiusrycAgry4MvIRKiYAmf4oxL5aLpR6oqQLDiqbLKsvjt7M06Jf+C
+            # Add DATABASE_URL if you are using one
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubctl-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: kubctl-api
+  ports:
+    - port: 80
+      targetPort: 4000
